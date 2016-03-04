@@ -1,1 +1,6 @@
 unix-prog-sample-code
+Hw1/*.o
+Hw1/hw1
+
+*.swp
+*.swo
