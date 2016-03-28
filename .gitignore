@@ -2,5 +2,8 @@ unix-prog-sample-code
 Hw1/*.o
 Hw1/hw1
 
+Hw2/wget*
+
 *.swp
 *.swo
+
