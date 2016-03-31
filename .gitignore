@@ -4,6 +4,7 @@ Hw1/hw1
 
 Hw2/wget*
 Hw2/*.so
+Hw2/*.log
 
 *.swp
 *.swo
