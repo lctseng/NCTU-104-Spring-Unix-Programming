@@ -8,6 +8,26 @@
 - Use LD_PRELOAD to load the shared object: hijack.so
   - target program is 'wget'
   - example usage: `env LD_PRELOAD=./hijack.so wget https://www.google.com.tw`
+- Special notation for read/write related function
+  - There will be two line for each function call to these functions
+  - The first line is shown when function is called
+  - The second line is shown when the original function returnd (have ==>> after function name)
+  - For example, when SSL_read is called:
+  ```
+  [SSL_read] read from encrypted channel: 0x163fab0, into buffer:0x153a660, max read: 8192
+  [SSL_read==>>] data(655 byte): <!doctype html><html itemscope="" itemtype="http:/
+  ```
+  - Note that these two lines may NOT be consecutive
+    - Several function calls may occur between these two lines
+    - For example:
+    ```
+    [SSL_read] (output for calling SSL_read)
+    [read] (internal function call in SSL_read)
+    [read==>>] (output after internal function call returned, may be binary data)
+    [read] (same as above)
+    [read==>>] (same as above)
+    [SSL_read==>] (output after original SSL_read returned)
+    ```
 
 ## Features
 - Hijack Log
