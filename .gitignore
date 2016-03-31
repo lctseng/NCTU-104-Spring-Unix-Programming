@@ -3,6 +3,7 @@ Hw1/*.o
 Hw1/hw1
 
 Hw2/wget*
+Hw2/*.so
 
 *.swp
 *.swo

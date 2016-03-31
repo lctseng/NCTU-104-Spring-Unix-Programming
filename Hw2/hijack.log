@@ -1,0 +1,250 @@
+[INFO](2016:03:31 21:08:47) Hijack initialized
+[INFO](2016:03:31 21:08:47) Function loaded: chmod
+[INFO](2016:03:31 21:08:47) Function loaded: unlink
+[INFO](2016:03:31 21:08:47) Function loaded: mkdir
+[INFO](2016:03:31 21:08:47) Function loaded: iconv_open
+[INFO](2016:03:31 21:08:47) Function loaded: fdopen
+[INFO](2016:03:31 21:08:47) Function loaded: freopen
+[INFO](2016:03:31 21:08:47) Function loaded: getline
+[INFO](2016:03:31 21:08:47) Function loaded: __getdelim
+[INFO](2016:03:31 21:08:47) Function loaded: fgetc
+[INFO](2016:03:31 21:08:47) Function loaded: _IO_getc
+[INFO](2016:03:31 21:08:47) Function loaded: fputs
+[INFO](2016:03:31 21:08:47) Function loaded: rename
+[INFO](2016:03:31 21:08:47) Function loaded: ftruncate
+[INFO](2016:03:31 21:08:47) Function loaded: utime
+[INFO](2016:03:31 21:08:47) Function loaded: connect
+[INFO](2016:03:31 21:08:47) Function loaded: fputc
+[INFO](2016:03:31 21:08:47) Function loaded: _IO_putc
+[INFO](2016:03:31 21:08:47) Function loaded: SSL_read
+[INFO](2016:03:31 21:08:47) Function loaded: SSL_write
+[JACK](2016:03:31 21:08:47) [fopen] Open file: /etc/wgetrc, mode: r
+[JACK](2016:03:31 21:08:47) [fopen] Open file: /u/cs/101/0116057/.wget-hsts, mode: r
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: --2016-03-31 21:08:47--  https://www.google.com.tw/
+
+[JACK](2016:03:31 21:08:47) [open] Open file: /dev/urandom, oflag: 2304
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x7ffff5cbb1a0, max read: 32
+[JACK](2016:03:31 21:08:47) [read==>>] data(32 byte): ‹D6õ:|œl
+Þá¤J6¾M/"XÓ(Ë[ä€Ó’
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: æ­£åœ¨æŸ¥æ‰¾ä¸»æ©Ÿ www.google.com.tw (www.google.com.tw)... 
+[JACK](2016:03:31 21:08:47) [fopen] Open file: /etc/hosts, mode: rce
+[JACK](2016:03:31 21:08:47) [open] Open file: /var/yp/binding/+cs.nis.2, oflag: 0
+[JACK](2016:03:31 21:08:47) [connect] FD :4, ip address: 140.113.235.1
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: 74.125.23.94
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: , 
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: 2404:6800:4008:c02::5e
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: 
+
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: æ­£åœ¨é€£æŽ¥ www.google.com.tw (www.google.com.tw)|74.125.23.94|:443... 
+[JACK](2016:03:31 21:08:47) [connect] FD :4, ip address: 74.125.23.94
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: é€£ä¸Šäº†ã€‚
+
+[JACK](2016:03:31 21:08:47) [write] write to fd: 4, from buffer:0x1029dd0, max write: 333
+[JACK](2016:03:31 21:08:47) [write==>>] data(333 byte): H
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127300, max read: 7
+[JACK](2016:03:31 21:08:47) [read==>>] data(7 byte): 
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x112730a, max read: 61
+[JACK](2016:03:31 21:08:47) [read==>>] data(61 byte): 
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): '¥
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 10149
+[JACK](2016:03:31 21:08:47) [read==>>] data(10149 byte): 
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): M
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 333
+[JACK](2016:03:31 21:08:47) [read==>>] data(333 byte): 
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): 
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 4
+[JACK](2016:03:31 21:08:47) [read==>>] data(4 byte): 
+[JACK](2016:03:31 21:08:47) [write] write to fd: 4, from buffer:0x112ccd0, max write: 126
+[JACK](2016:03:31 21:08:47) [write==>>] data(126 byte): 
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): 
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 190
+[JACK](2016:03:31 21:08:47) [read==>>] data(190 byte): 
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): 
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 1
+[JACK](2016:03:31 21:08:47) [read==>>] data(1 byte): 
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): 
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 40
+[JACK](2016:03:31 21:08:47) [read==>>] data(40 byte): 
+[JACK](2016:03:31 21:08:47) [SSL_write] write to encrypted channel: 0x113dea0, from buffer:0x7ffff5cbb260, max write: 144
+[JACK](2016:03:31 21:08:47) [write] write to fd: 4, from buffer:0x10367b3, max write: 173
+[JACK](2016:03:31 21:08:47) [write==>>] data(173 byte): 
+[JACK](2016:03:31 21:08:47) [SSL_write==>>] data(144 byte): GET / HTTP/1.1
+User-Agent: Wget/1.17.1 (linux-gnu
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: å·²é€å‡º HTTP è¦æ±‚ï¼Œæ­£åœ¨ç­‰å€™å›žæ‡‰... 
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): …
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 1413
+[JACK](2016:03:31 21:08:47) [read==>>] data(1413 byte): 
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x1123780, max read: 511
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(511 byte): HTTP/1.1 200 OK
+Date: Thu, 31 Mar 2016 13:08:47 G
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x112397f, max read: 217
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(217 byte): :47 GMT; path=/; domain=.google.com.tw; HttpOnly
+
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: 200 OK
+
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: é•·åº¦: 
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: æœªæŒ‡å®š
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data:  [text/html]
+
+[JACK](2016:03:31 21:08:47) [fopen] Open file: index.html.11, mode: wb
+[JACK](2016:03:31 21:08:47) [open] Open file: /usr/lib/charset.alias, oflag: 131072
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: Saving to: â€˜index.html.11â€™
+
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: 
+
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: 
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: index.html.11                        [<=>                                                       ]       0  --.-KB/s               
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x112dde0, max read: 6
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(6 byte): 4af3
+
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x1032cf0, max read: 8192
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(655 byte): <!doctype html><html itemscope="" itemtype="http:/
+[JACK](2016:03:31 21:08:47) [fwrite] write to FILE stream: 0x1123e40, from buffer:0x1032cf0, max write: 1 * 655 
+[JACK](2016:03:31 21:08:47) [fwrite==>>] data(655 byte): <!doctype html><html itemscope="" itemtype="http:/
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x1032cf0, max read: 8192
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): …
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 1413
+[JACK](2016:03:31 21:08:47) [read==>>] data(1413 byte): 
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(1389 byte): 59019,4059767,4060329,4060726,4060859,4061000,4061
+[JACK](2016:03:31 21:08:47) [fwrite] write to FILE stream: 0x1123e40, from buffer:0x1032cf0, max write: 1 * 1389 
+[JACK](2016:03:31 21:08:47) [fwrite==>>] data(1389 byte): 59019,4059767,4060329,4060726,4060859,4061000,4061
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x1032cf0, max read: 8192
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): …
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 1413
+[JACK](2016:03:31 21:08:47) [read==>>] data(1413 byte): 
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(1389 byte): .getLEI(e))?c+="&lei="+e:h!=google.kEI&&(c+="&lei=
+[JACK](2016:03:31 21:08:47) [fwrite] write to FILE stream: 0x1123e40, from buffer:0x1032cf0, max write: 1 * 1389 
+[JACK](2016:03:31 21:08:47) [fwrite==>>] data(1389 byte): .getLEI(e))?c+="&lei="+e:h!=google.kEI&&(c+="&lei=
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x1032cf0, max read: 8192
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): …
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 1413
+[JACK](2016:03:31 21:08:47) [read==>>] data(1413 byte): 
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(1389 byte): color:#00c !important}.gbi .gb4{color:#dd8e27 !imp
+[JACK](2016:03:31 21:08:47) [fwrite] write to FILE stream: 0x1123e40, from buffer:0x1032cf0, max write: 1 * 1389 
+[JACK](2016:03:31 21:08:47) [fwrite==>>] data(1389 byte): color:#00c !important}.gbi .gb4{color:#dd8e27 !imp
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x1032cf0, max read: 8192
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): …
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 1413
+[JACK](2016:03:31 21:08:47) [read==>>] data(1413 byte): 
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(1389 byte): .lst:focus{outline:none}</style><script></script><
+[JACK](2016:03:31 21:08:47) [fwrite] write to FILE stream: 0x1123e40, from buffer:0x1032cf0, max write: 1 * 1389 
+[JACK](2016:03:31 21:08:47) [fwrite==>>] data(1389 byte): .lst:focus{outline:none}</style><script></script><
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x1032cf0, max read: 8192
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): …
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 1413
+[JACK](2016:03:31 21:08:47) [read==>>] data(1413 byte): 
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(1389 byte): gb_70 href="https://accounts.google.com/ServiceLog
+[JACK](2016:03:31 21:08:47) [fwrite] write to FILE stream: 0x1123e40, from buffer:0x1032cf0, max write: 1 * 1389 
+[JACK](2016:03:31 21:08:47) [fwrite==>>] data(1389 byte): gb_70 href="https://accounts.google.com/ServiceLog
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x1032cf0, max read: 8192
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): …
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 1413
+[JACK](2016:03:31 21:08:47) [read==>>] data(1413 byte): 
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(1389 byte): ;background-image:-o-linear-gradient(top,#4d90fe,#
+[JACK](2016:03:31 21:08:47) [fwrite] write to FILE stream: 0x1123e40, from buffer:0x1032cf0, max write: 1 * 1389 
+[JACK](2016:03:31 21:08:47) [fwrite==>>] data(1389 byte): ;background-image:-o-linear-gradient(top,#4d90fe,#
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x1032cf0, max read: 8192
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): …
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 1413
+[JACK](2016:03:31 21:08:47) [read==>>] data(1413 byte): 
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(1389 byte): /td> </tr> </table> </div> <script type="text/java
+[JACK](2016:03:31 21:08:47) [fwrite] write to FILE stream: 0x1123e40, from buffer:0x1032cf0, max write: 1 * 1389 
+[JACK](2016:03:31 21:08:47) [fwrite==>>] data(1389 byte): /td> </tr> </table> </div> <script type="text/java
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x1032cf0, max read: 8192
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): …
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 1413
+[JACK](2016:03:31 21:08:47) [read==>>] data(1413 byte): 
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(1389 byte): .Za=window.location.protocol+"//www.google.com/_/o
+[JACK](2016:03:31 21:08:47) [fwrite] write to FILE stream: 0x1123e40, from buffer:0x1032cf0, max write: 1 * 1389 
+[JACK](2016:03:31 21:08:47) [fwrite==>>] data(1389 byte): .Za=window.location.protocol+"//www.google.com/_/o
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x1032cf0, max read: 7420
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): …
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 1413
+[JACK](2016:03:31 21:08:47) [read==>>] data(1413 byte): 
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(1389 byte): ion(b,c,d,e,f,h){b=a.s.Ca(c,b,a.s.ya.$a,a.s.Ba.ra,
+[JACK](2016:03:31 21:08:47) [fwrite] write to FILE stream: 0x1123e40, from buffer:0x1032cf0, max write: 1 * 1389 
+[JACK](2016:03:31 21:08:47) [fwrite==>>] data(1389 byte): ion(b,c,d,e,f,h){b=a.s.Ca(c,b,a.s.ya.$a,a.s.Ba.ra,
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x1032cf0, max read: 6031
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): …
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 1413
+[JACK](2016:03:31 21:08:47) [read==>>] data(1413 byte): 
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(1389 byte): yle.right,10)||0;a.o.w.style.visibility=2*(a.o.w.o
+[JACK](2016:03:31 21:08:47) [fwrite] write to FILE stream: 0x1123e40, from buffer:0x1032cf0, max write: 1 * 1389 
+[JACK](2016:03:31 21:08:47) [fwrite==>>] data(1389 byte): yle.right,10)||0;a.o.w.style.visibility=2*(a.o.w.o
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x1032cf0, max read: 4642
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): …
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 1413
+[JACK](2016:03:31 21:08:47) [read==>>] data(1413 byte): 
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(1389 byte): GroupID=5062030;var payloadType=5;var cookieMaxAge
+[JACK](2016:03:31 21:08:47) [fwrite] write to FILE stream: 0x1123e40, from buffer:0x1032cf0, max write: 1 * 1389 
+[JACK](2016:03:31 21:08:47) [fwrite==>>] data(1389 byte): GroupID=5062030;var payloadType=5;var cookieMaxAge
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x1032cf0, max read: 3253
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): …
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 1413
+[JACK](2016:03:31 21:08:47) [read==>>] data(1413 byte): 
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(1389 byte): n:top" autocomplete="off" class="lst" value="" tit
+[JACK](2016:03:31 21:08:47) [fwrite] write to FILE stream: 0x1123e40, from buffer:0x1032cf0, max write: 1 * 1389 
+[JACK](2016:03:31 21:08:47) [fwrite==>>] data(1389 byte): n:top" autocomplete="off" class="lst" value="" tit
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x1032cf0, max read: 1864
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): …
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 1413
+[JACK](2016:03:31 21:08:47) [read==>>] data(1413 byte): 
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(1389 byte): le.cdo={height:0,width:0};(function(){var a=window
+[JACK](2016:03:31 21:08:47) [fwrite] write to FILE stream: 0x1123e40, from buffer:0x1032cf0, max write: 1 * 1389 
+[JACK](2016:03:31 21:08:47) [fwrite==>>] data(1389 byte): le.cdo={height:0,width:0};(function(){var a=window
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x1032cf0, max read: 475
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127303, max read: 5
+[JACK](2016:03:31 21:08:47) [read==>>] data(5 byte): ú
+[JACK](2016:03:31 21:08:47) [read] read from fd: 4, into buffer:0x1127308, max read: 506
+[JACK](2016:03:31 21:08:47) [read==>>] data(506 byte): 
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(475 byte): c":"¤w±q±zªº¡u\u003Ca href=\"/history\"\u003Eºô­¶¬
+[JACK](2016:03:31 21:08:47) [fwrite] write to FILE stream: 0x1123e40, from buffer:0x1032cf0, max write: 1 * 475 
+[JACK](2016:03:31 21:08:47) [fwrite==>>] data(475 byte): c":"¤w±q±zªº¡u\u003Ca href=\"/history\"\u003Eºô­¶¬
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x1143a90, max read: 2
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(2 byte): 
+
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x112dde0, max read: 3
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(3 byte): 0
+
+[JACK](2016:03:31 21:08:47) [SSL_read] read from encrypted channel: 0x113dea0, into buffer:0x1143a90, max read: 2
+[JACK](2016:03:31 21:08:47) [SSL_read==>>] data(2 byte): 
+
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: 
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: index.html.11                        [ <=>                                                      ]  18.74K  --.-KB/s    in 0.001s  
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: 
+
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: 
+
+[JACK](2016:03:31 21:08:47) [fputs] Write to FILE stream: 0x7f1e4acf2520, data: 2016-03-31 21:08:47 (13.3 MB/s) - â€˜index.html.11â€™ saved [19187]
+
+
+[JACK](2016:03:31 21:08:47) [fopen] Open file: /u/cs/101/0116057/.wget-hsts, mode: a+
+[JACK](2016:03:31 21:08:47) [ftruncate] Truncate file descriptor 5, length: 0
+[JACK](2016:03:31 21:08:47) [fwrite] write to FILE stream: 0x1135b60, from buffer:0x452e70, max write: 1 * 46 
+[JACK](2016:03:31 21:08:47) [fwrite==>>] data(46 byte): # HSTS 1.0 Known Hosts database for GNU Wget.
+
+[JACK](2016:03:31 21:08:47) [fwrite] write to FILE stream: 0x1135b60, from buffer:0x452e41, max write: 1 * 25 
+[JACK](2016:03:31 21:08:47) [fwrite==>>] data(25 byte): # Edit at your own risk.
+
+[JACK](2016:03:31 21:08:47) [fwrite] write to FILE stream: 0x1135b60, from buffer:0x452ea0, max write: 1 * 61 
+[JACK](2016:03:31 21:08:47) [fwrite==>>] data(61 byte): # <hostname>[:<port>]	<incl. subdomains>	<created>
