@@ -6,7 +6,7 @@
 
 #include "pipe.h"
 
-#define DEBUG
+//#define DEBUG
 
 using std::cerr;
 using std::endl;
@@ -14,8 +14,6 @@ using std::string;
 using std::vector;
 
 
-typedef void (*Sigfunc)(int);
-static Sigfunc old_handler;
 
 
 void err_abort(const string& msg);
@@ -32,10 +30,6 @@ void delete_argv(char** argv);
 bool exec_cmd(const string& filename,const string& arg_list);
 // pipe-related
 void exit_unknown_cmd(UnixPipe& pipe);
-// Signal handler for SIGCHLD
-void handle_sigchld(int sig);
-void register_sigchld();
-void restore_sigchld();
 // template function for debug
 template<class T>
 int debug(const T& val){

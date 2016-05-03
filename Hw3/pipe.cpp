@@ -15,15 +15,18 @@ UnixPipe::UnixPipe(bool real){
     pipe(fd);
     read_fd = fd[0];
     write_fd = fd[1];
+#ifdef DEBUG
+    cout << "Creating New Pipe, read = " << read_fd << ", write = " << write_fd << endl;
+#endif
   }
 } 
-bool UnixPipe::is_write_closed()const{
+inline bool UnixPipe::is_write_closed()const{
   return write_fd < 0;
 }
-bool UnixPipe::is_read_closed()const{
+inline bool UnixPipe::is_read_closed()const{
   return read_fd < 0;
 }
-bool UnixPipe::is_alive() const{
+inline bool UnixPipe::is_alive() const{
   return !is_write_closed() || !is_read_closed();
 }
 int UnixPipe::write(const string& str)const{
@@ -67,6 +70,9 @@ bool UnixPipe::close_write(){
   return false;
 }
 void UnixPipe::close(){
+#ifdef DEBUG
+    cout << "Closing Pipe, read = " << read_fd << ", write = " << write_fd << endl;
+#endif
   close_read();
   close_write();
 }

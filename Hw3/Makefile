@@ -2,5 +2,10 @@ CXX = g++
 CFLAGS = --std=c++14
 shell: shell.o pipe.o fdstream.o lib.o
 	$(CXX) $(CFLAGS) -o $@ $^
-%.o: %.cpp %.h
-	$(CXX) $(CFLAGS) -c $<
+shell.o: shell.cpp
+	$(CXX) $(CFLAGS) -c $< -o $@
+%.o: %.cpp %.h lib.h
+	$(CXX) $(CFLAGS) -c $< -o $@
+clean:
+	rm *.o
+	rm shell

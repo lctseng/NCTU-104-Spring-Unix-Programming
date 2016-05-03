@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <glob.h>
 
 #include <sstream>
 #include <cstring>
@@ -54,8 +55,27 @@ char** convert_string_to_argv(const string& arg_list){
   stringstream ss(arg_list);
   string arg;
   vector<string> arg_array;
+  glob_t globbuf;
+  int skip_convert = 1; // skip first one
   while(ss >> arg){
-    arg_array.push_back(arg);
+    // arg is a single argument
+    if(skip_convert-- > 0){
+      // no convert
+      arg_array.push_back(arg);
+    }
+    else{
+      // try to expand it via glob
+#ifdef DEBUG
+      std::cout << "Converting:" << arg << std::endl;
+#endif
+      glob(arg.c_str(), GLOB_NOCHECK, NULL, &globbuf);
+      for(int i=0;i<globbuf.gl_pathc;i++){
+#ifdef DEBUG
+        std::cout << "Converted arg: " << globbuf.gl_pathv[i] << std::endl;
+#endif
+        arg_array.push_back(globbuf.gl_pathv[i]);
+      }
+    }
   }
   char** argv = new char*[arg_array.size()+1];
   for(int i=0;i<arg_array.size();i++){
@@ -104,16 +124,4 @@ void exit_unknown_cmd(UnixPipe& pipe){
 }
 
 
-
-// Signal handler for SIGCHLD
-void handle_sigchld(int sig) {
-  while (waitpid((pid_t)(-1), 0, WNOHANG) > 0) {}
-}
-
-void register_sigchld(){
-  old_handler = signal(SIGCHLD,handle_sigchld);
-}
-void restore_sigchld(){
-  signal(SIGCHLD,old_handler);
-}
 
