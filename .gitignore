@@ -7,6 +7,7 @@ Hw2/*.so
 Hw2/*.log
 
 Hw3/shell
+Hw3/delay
 Hw3/*.o
 
 *.swp
