@@ -33,8 +33,16 @@ struct CmdEntry{
     fileflag(fileflag){}
 };
 
+struct JobEntity{
+  pid_t pgid;
+  int wait_count;
+  JobEntity(pid_t pgid,int wait_count = 1):pgid(pgid),wait_count(wait_count){}
+};
+
 extern char **environ;
 bool flag_stopped;
+deque<JobEntity> stopped_jobs;
+
 
 typedef void (*Sigfunc)(int);
 static Sigfunc old_handler;
@@ -47,7 +55,6 @@ void handle_sigchld(int sig) {
       // have stopped, resume to foreground
       flag_stopped = true;
     }
-    
   }
 }
 
@@ -58,6 +65,18 @@ void restore_sigchld(){
   signal(SIGCHLD,old_handler);
 }
 
+JobEntity wake_up_one_stopped_pg(){
+  if(!stopped_jobs.empty()){
+    JobEntity ent = stopped_jobs.front();
+    stopped_jobs.pop_front();
+    kill(ent.pgid * -1,SIGCONT);
+    return ent;
+  }
+  else{
+    cerr << "No current job" << endl;
+    return JobEntity(-1);
+  }
+}
 
 sigset_t block_signals(){
   sigset_t newmask, oldmask;
@@ -109,7 +128,8 @@ void run_command(CmdEntry& cmd,UnixPipe& last_pipe, UnixPipe& next_pipe){
   exec_cmd(cmd.cmd,cmd.arg_line);
 }
 
-void run_commands(vector<CmdEntry>& cmds){
+void run_commands(vector<CmdEntry>& cmds,bool run_as_bg){
+  restore_sigchld();
   flag_stopped = false;
   sigset_t oldmask = block_signals();
 #ifdef DEBUG
@@ -133,6 +153,7 @@ void run_commands(vector<CmdEntry>& cmds){
     pid_t pid = fork();
     if(pid > 0) // parent
     {
+      // we need to know children's pgid
       if(pgid == 0){
         pgid = pid;
       }
@@ -145,7 +166,7 @@ void run_commands(vector<CmdEntry>& cmds){
     else // child
     {
       setpgid(0,pgid);
-      //signal(SIGTSTP,SIG_DFL);
+      signal(SIGTSTP,SIG_DFL);
       last_idx = i;
       next_idx = i + 1;
       // close unrelated pipe
@@ -165,9 +186,6 @@ void run_commands(vector<CmdEntry>& cmds){
     }
   }
   // parent
-  // change foreground group to child pg
-  tcsetpgrp(STDIN_FILENO,pgid);
-  //tcsetpgrp(STDOUT_FILENO,pgid);
   // close all pipe
 #ifdef DEBUG
   cerr << "[Parent] closing all pipes" << endl;
@@ -175,31 +193,38 @@ void run_commands(vector<CmdEntry>& cmds){
   for(auto& pipe : pipes){
     pipe.close();
   }
-  // wait for all children
-  int wait_count = cmds.size();
-  while(wait_count > 0){
-    int status = 0;
-    pid_t pid = waitpid(pgid * -1, &status ,WUNTRACED);
-    //cout << "pid = " << pid << endl;
-    // collect one status
-    if(WIFSTOPPED(status)){
-      // have stopped, resume to foreground
-      //cout << "pid " << pid << " is stopped" << endl;
-      break;
+  // if child is a foreground
+  if(!run_as_bg){
+    // change foreground group to child pg
+    tcsetpgrp(STDIN_FILENO,pgid);
+    // wait for all children
+    int wait_count = cmds.size();
+    while(wait_count > 0){
+      int status = 0;
+      pid_t pid = waitpid(pgid * -1, &status ,WUNTRACED);
+      //cout << "pid = " << pid << endl;
+      // collect one status
+      if(WIFSTOPPED(status)){
+        // have stopped, resume to foreground
+        stopped_jobs.emplace_back(pgid,wait_count);
+        //cout << "pid " << pid << " is stopped" << endl;
+        break;
+      }
+      wait_count--;
     }
-    wait_count--;
+    // change foreground to my pgid
+    tcsetpgrp(STDIN_FILENO,getpgid(0));
   }
-  // change foreground to my pgid
-  tcsetpgrp(STDIN_FILENO,getpgid(0));
   unblock_signals(oldmask);
+  register_sigchld();
 }
 
 int main(){
-  //signal(SIGTSTP,SIG_IGN);
-  //register_sigchld();
+  signal(SIGTSTP,SIG_IGN);
   vector<CmdEntry> cmds;
   string str;
   while(true){
+    register_sigchld();
     cout << "shell-prompt$ ";
     if(!getline(cin,str)){
       cout << "EOF encountered, exiting..." << endl;
@@ -207,8 +232,39 @@ int main(){
     }
     str = string_strip(str);
     smatch match;
-    if(regex_search(str, regex("^\\s*exit"))){
+    if(regex_search(str, regex("^\\s*exit\\s*$"))){
       break;
+    }
+    // fg
+    else if(regex_search(str, regex("^\\s*fg\\s*$"))){
+      JobEntity ent = wake_up_one_stopped_pg();
+      pid_t pgid = ent.pgid;
+      // change it to foreground
+      restore_sigchld();
+      sigset_t oldmask = block_signals();
+      tcsetpgrp(STDIN_FILENO,pgid);
+      int wait_count = ent.wait_count;
+      while(wait_count > 0){
+        int status = 0;
+        pid_t pid = waitpid(pgid * -1, &status ,WUNTRACED);
+        //cout << "pid = " << pid << endl;
+        // collect one status
+        if(WIFSTOPPED(status)){
+          // have stopped, resume to foreground
+          stopped_jobs.emplace_back(pgid,wait_count);
+          //cout << "pid " << pid << " is stopped" << endl;
+          break;
+        }
+        wait_count--;
+      }
+      // change foreground to my pgid
+      tcsetpgrp(STDIN_FILENO,getpgid(0));
+      unblock_signals(oldmask);
+      register_sigchld();
+    }
+    // bg
+    else if(regex_search(str, regex("^\\s*bg\\s*$"))){
+      wake_up_one_stopped_pg();
     }
     // printenv
     else if(regex_search(str,match,regex("^\\s*printenv(\\s*|$)"))){
@@ -251,9 +307,10 @@ int main(){
     } // set env
     else{
       cmds.clear();
+      bool run_as_bg = false;
       string cut_string = str;
       string next_cut;
-      while(regex_search(cut_string,match,regex("(.+?)($|(\\| )|(([|!]\\d+\\s*)+))"))){
+      while(regex_search(cut_string,match,regex("(.+?)($|(\\| )|(&))"))){
         next_cut = match.suffix();
         string src_cmd_line = string_strip(match[1]);
         string cmd_line = src_cmd_line;
@@ -300,12 +357,16 @@ int main(){
         debug("---------");
 #endif
         cmds.emplace_back(cmd,arg_line,read_filename,write_filename,fileflag);
+        // check need bg?
+        if(suffix == "&"){
+          run_as_bg = true;
+        }
         // prepare for next cut
         cut_string = std::move(next_cut);
       } // end for line-cutting
       // cmd vector is ready here
       if(!cmds.empty()){
-        run_commands(cmds);
+        run_commands(cmds,run_as_bg);
       }
     } // end for normal cmd
   } // end for while each line

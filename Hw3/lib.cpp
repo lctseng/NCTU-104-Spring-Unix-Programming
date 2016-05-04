@@ -75,6 +75,7 @@ char** convert_string_to_argv(const string& arg_list){
 #endif
         arg_array.push_back(globbuf.gl_pathv[i]);
       }
+      globfree(&globbuf);
     }
   }
   char** argv = new char*[arg_array.size()+1];
