@@ -10,6 +10,9 @@ Hw3/shell
 Hw3/delay
 Hw3/*.o
 
+Hw4/testcase
+Hw4/webserver
+
 *.swp
 *.swo
 
