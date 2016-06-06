@@ -7,6 +7,7 @@
 
 #include "unistd.h"
 #include "sys/wait.h"
+#include "sys/select.h"
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <dirent.h>
@@ -52,7 +53,7 @@ void handleDirectoryWithIndex(const string&);
 void handleDirectoryWithoutIndex(const string&);
 void sendServerError();
 int detachFork();
-void print_http_info();
+void print_http_info(FILE*);
 void send_common_header(int code);
 string string_strip(const string&);
 string get_mime_type_by_extension(const string& extension);
@@ -194,18 +195,19 @@ void send_common_header(int code){
   fprintf(fp_client,"Connection: close\r\n");
 }
 // print http info
-void print_http_info(){
-  fprintf(fp_client,"HTTP/1.1 200 OK\r\n");
-  fprintf(fp_client,"Connection: close\r\n");
-  fprintf(fp_client,"Content-Type: text/plain\r\n");
-  fprintf(fp_client,"\r\n");
-  fprintf(fp_client,"Http verb: %s\r\n", http_info.verb.c_str());
-  fprintf(fp_client,"Http path: %s\r\n", http_info.path.c_str());
-  fprintf(fp_client,"Http query: %s\r\n", http_info.query.c_str());
-  fprintf(fp_client,"Other Headers:\r\n");
+void print_http_info(FILE* fp){
+  fprintf(fp,"HTTP/1.1 200 OK\r\n");
+  fprintf(fp,"Connection: close\r\n");
+  fprintf(fp,"Content-Type: text/plain\r\n");
+  fprintf(fp,"\r\n");
+  fprintf(fp,"Http verb: %s\r\n", http_info.verb.c_str());
+  fprintf(fp,"Http path: %s\r\n", http_info.path.c_str());
+  fprintf(fp,"Http query: %s\r\n", http_info.query.c_str());
+  fprintf(fp,"Other Headers:\r\n");
   for(const auto& pair : http_info.headerInfo){
-    fprintf(fp_client,"%s: %s\r\n", pair.first.c_str(), pair.second.c_str());
+    fprintf(fp,"%s: %s\r\n", pair.first.c_str(), pair.second.c_str());
   }
+  fflush(fp);
 }
 void initMIME(){
   mimeMap.insert(make_pair("txt","text/plain"));
@@ -250,7 +252,7 @@ string get_mime_type_by_extension(const string& extension){
   }
 }
 bool is_extension_executable(const string& ext){
-  return ext == "sh" || ext == "php"; 
+  return ext == "sh" || ext == "php" || ext == "cgi"; 
 }
 bool is_file_executable(const string& filename){
   do{
@@ -291,6 +293,7 @@ int handleClient(){
       http_info.headerInfo.insert(make_pair(match[1],match[2]));
     }
   }
+  print_http_info(stdout);
   handleRequest();
   /*
   if(http_info.verb == "GET"){
@@ -301,7 +304,6 @@ int handleClient(){
   }
   */
   // print debug info
-  //print_http_info();
   return 0;
 }
 void handleStaticNormalFile(const string& file_path, struct stat& statbuf, const string& extension){
@@ -320,42 +322,130 @@ void handleStaticNormalFile(const string& file_path, struct stat& statbuf, const
   }
 }
 void handleStaticExecutableFile(const string& file_path){
-  // clear env
-  clearenv();
-  // basic http env
-  setenv("CONTENT_LENGTH",http_info.headerInfo["Content-Length"].c_str(),1);
-  setenv("CONTENT_TYPE",http_info.headerInfo["Content-Type"].c_str(),1);
-  setenv("REQUEST_URI",http_info.uri.c_str(),1);
-  //setenv("REQUEST_METHOD",http_info.verb.c_str(),1);
-  setenv("REQUEST_METHOD","GET",1);
-  setenv("SCRIPT_NAME",http_info.path.c_str(),1);
-  setenv("QUERY_STRING",http_info.query.c_str(),1);
-  setenv("GATEWAY_INTERFACE","CGI/1.1",1);
-  setenv("PATH","/bin:/usr/bin:/usr/local/bin",1);
-  // address
-  char addr_buf[20] = {0};
-  inet_ntop(AF_INET,&http_info.addr.sin_addr,addr_buf,sizeof(addr_buf));
-  setenv("REMOTE_ADDR",addr_buf,1);
-  // port
-  char port_buf[6] = {0};
-  snprintf(port_buf,5,"%u",ntohs(http_info.addr.sin_port));
-  setenv("REMOTE_PORT",port_buf,1);
-  // reopen fd
-  cout << "Executing script:" << file_path << endl;
-  dup2(fd_client,STDOUT_FILENO);
-  if(http_info.verb == "POST"){
-    //dup2(fd_client,STDIN_FILENO);
-    //close(STDIN_FILENO);
+  int read_fd[2], write_fd[2];
+  int pid;
+  pipe(read_fd);
+  pipe(write_fd);
+  pid = fork();
+  if(pid < 0){
+    perror("fork in CGI");
+    sendServerError();
+  }
+  else if(pid == 0){ 
+    // child
+    // set up pipe for stdin and stdout
+    // use read_fd to write data, write_fd to read data
+    dup2(write_fd[0],STDIN_FILENO);
+    dup2(read_fd[1],STDOUT_FILENO);
+    close(fd_client);
+    close(read_fd[0]);
+    close(read_fd[1]);
+    close(write_fd[0]);
+    close(write_fd[1]);
+    // setup env
+    // clear env
+    clearenv();
+    // basic http env
+    setenv("CONTENT_LENGTH",http_info.headerInfo["Content-Length"].c_str(),1);
+    setenv("CONTENT_TYPE",http_info.headerInfo["Content-Type"].c_str(),1);
+    setenv("REQUEST_URI",http_info.uri.c_str(),1);
+    //setenv("REQUEST_METHOD",http_info.verb.c_str(),1);
+    setenv("REQUEST_METHOD","GET",1);
+    setenv("SCRIPT_NAME",http_info.path.c_str(),1);
+    setenv("QUERY_STRING",http_info.query.c_str(),1);
+    setenv("GATEWAY_INTERFACE","CGI/1.1",1);
+    setenv("PATH","/bin:/usr/bin:/usr/local/bin",1);
+    // address
+    char addr_buf[20] = {0};
+    inet_ntop(AF_INET,&http_info.addr.sin_addr,addr_buf,sizeof(addr_buf));
+    setenv("REMOTE_ADDR",addr_buf,1);
+    // port
+    char port_buf[6] = {0};
+    snprintf(port_buf,5,"%u",ntohs(http_info.addr.sin_port));
+    setenv("REMOTE_PORT",port_buf,1);
+    // exec
+    if(!exec_cmd(file_path,"")){
+      fprintf(stdout,"Cannot exec CGI: %s\r\n",file_path.c_str());
+      exit(-1);
+    } 
   }
   else{
-    //close(STDIN_FILENO);
+    // parent
+    int size_left = atoi(http_info.headerInfo["Content-Length"].c_str());
+    close(read_fd[1]);
+    close(write_fd[0]);
+    // send header
+    send_common_header(200);
+    // start forwarding data
+    fd_set rset;
+    FD_ZERO(&rset);
+    FD_SET(read_fd[0],&rset);
+    if(http_info.verb == "POST"){
+      FD_SET(fd_client,&rset);
+    }
+    else{
+      close(write_fd[1]);
+    }
+    int max_fd = max(fd_client, read_fd[0]);
+    char buf[LINE_BUF_SIZE];
+    while(true){
+        fd_set rs = rset;
+        int nready = select(max_fd+1,&rs,NULL,NULL,NULL);
+        if(nready < 0){
+          perror("select");
+          sendServerError();
+          break;
+        }
+        else{
+          if(FD_ISSET(read_fd[0],&rs)){
+            // from cgi
+            bzero(buf,LINE_BUF_SIZE);
+            int n = read(read_fd[0], buf, LINE_BUF_SIZE);
+            if(n < 0){
+              perror("read from cgi");
+              break;
+            }
+            else if(n == 0){
+              cout << "CGI terminated" << endl;
+              break;
+            }
+            else{
+              cout << "From CGI:" << buf <<  endl;
+              write(fd_client,buf,n);
+            }
+          }
+          else if(FD_ISSET(fd_client, &rs)){
+            // from socket
+            bzero(buf,LINE_BUF_SIZE);
+            int n = read(fd_client, buf, min(size_left,LINE_BUF_SIZE));
+            if(n < 0){
+              perror("read from socket");
+              break;
+            }
+            else if(n == 0){
+              cout << "Socket closed" << endl;
+              FD_CLR(fd_client,&rset);
+              close(write_fd[1]);
+            }
+            else{
+              cout << "From socket:" << buf <<  endl;
+              write(write_fd[1],buf,n);
+              size_left -= n;
+              if(size_left == 0){
+                cout << "content size limit reached" << endl;
+                FD_CLR(fd_client,&rset);
+                close(write_fd[1]);
+              }
+            }
+          }
+        }
+      
+    }
+    waitpid(pid,NULL,0);
   }
-  send_common_header(200);
-  //close(fd_client);
-  if(!exec_cmd(file_path,"")){
-    sendServerError();
-    fprintf(fp_client,"Cannot exec CGI: %s\r\n",file_path.c_str());
-  }
+
+
+
 }
 void handleStaticFile(const string& file_path, struct stat& statbuf){
   // get extension
@@ -483,22 +573,7 @@ void handleRequest(){
   else{
     if(errno == EACCES ){
       // permission
-      // if it's a directroy, use normal error code
-      struct stat stat_result;
-      if(stat(file_path.c_str(),&stat_result) == 0){
-        if (S_ISDIR(stat_result.st_mode)){
-          // denied directory, use normal 403
-          send_common_header(403);
-        }
-        else{
-          // denied static file, use 404
-          send_common_header(404);
-        }
-      }
-      else{
-        // stat error, use 404 by default
-        send_common_header(404);
-      }
+      send_common_header(404);
       fprintf(fp_client,"Content-Type: text/plain\r\n");
       fprintf(fp_client,"\r\n");
       fprintf(fp_client,"Access denied for %s\r\n",file_path.c_str());
