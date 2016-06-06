@@ -21,6 +21,7 @@ using namespace std;
 #define LINE_BUF_SIZE 2048
 
 FILE* fp_client;
+int fd_client;
 
 unsigned short bindPort;
 
@@ -41,21 +42,27 @@ map<string,string> mimeMap;
 void initMIME();
 int socketInit();
 int handleClient();
-void handleGET();
-void handlePOST();
+void handleRequest();
 void handleStaticFile(const string&, struct stat&);
+void handleStaticNormalFile(const string&, struct stat&, const string&);
+void handleStaticExecutableFile(const string&);
 void handleDirectory(const string&);
 void handleDirectoryWithRedirect(const string&);
 void handleDirectoryWithIndex(const string&);
 void handleDirectoryWithoutIndex(const string&);
+void sendServerError();
 int detachFork();
 void print_http_info();
 void send_common_header(int code);
 string string_strip(const string&);
-string get_mime_type(const string& filename);
+string get_mime_type_by_extension(const string& extension);
+string get_extension(const string& filename);
+bool is_extension_executable(const string& ext);
+bool is_file_executable(const string& ext);
+bool exec_cmd(const string& filename,const string& arg_list);
 
 int main(int argc,char** argv){
-  int fd_self, fd_client;
+  int fd_self;
   int val, pid;
   socklen_t socklen;
   if(argc < 3){
@@ -218,26 +225,43 @@ void initMIME(){
   mimeMap.insert(make_pair("bz2","application/x-bzip2"));
   mimeMap.insert(make_pair("gz","application/x-gzip"));
 }
-string get_mime_type(const string& filename){
+string get_extension(const string& filename){
   smatch match;
   if(regex_search(filename,match,regex("\\.(\\w+)$"))){
-    string ext = match[1];
-    transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-    cout << "Finding MIME for extension:" << ext << endl;
-    auto it = mimeMap.find(ext);
-    if(it != mimeMap.end()){
-      cout << "->found mime:" << it->second << endl;
-      return it->second;
-    }
-    else{
-      cout << "->not found" << endl;
-      return "text/plain";
-    }
+    return match[1];
   }
   else{
     // cannot find extension
+    return "";
+  }
+}
+string get_mime_type_by_extension(const string& extension){
+  string ext = extension;
+  transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+  cout << "Finding MIME for extension:" << ext << endl;
+  auto it = mimeMap.find(ext);
+  if(it != mimeMap.end()){
+    cout << "->found mime:" << it->second << endl;
+    return it->second;
+  }
+  else{
+    cout << "->not found" << endl;
     return "text/plain";
   }
+}
+bool is_extension_executable(const string& ext){
+  return ext == "sh" || ext == "php"; 
+}
+bool is_file_executable(const string& filename){
+  do{
+    // check access
+    if(access(filename.c_str(),R_OK | X_OK) != 0){
+      break;
+    }
+    return true;
+  }while(false);
+  // fallback: false
+  return false;
 }
 int handleClient(){
   char buf[LINE_BUF_SIZE];
@@ -267,19 +291,22 @@ int handleClient(){
       http_info.headerInfo.insert(make_pair(match[1],match[2]));
     }
   }
+  handleRequest();
+  /*
   if(http_info.verb == "GET"){
     handleGET();
   }
   else if(http_info.verb == "POST"){
     handlePOST();
   }
+  */
   // print debug info
   //print_http_info();
   return 0;
 }
-void handleStaticFile(const string& file_path, struct stat& statbuf){
+void handleStaticNormalFile(const string& file_path, struct stat& statbuf, const string& extension){
   send_common_header(200);
-  fprintf(fp_client,"Content-Type: %s\r\n",get_mime_type(file_path).c_str());
+  fprintf(fp_client,"Content-Type: %s\r\n",get_mime_type_by_extension(extension).c_str());
   fprintf(fp_client,"Content-Length: %d\r\n",statbuf.st_size);
   fprintf(fp_client,"\r\n");
   // read bytes and send to client
@@ -291,8 +318,55 @@ void handleStaticFile(const string& file_path, struct stat& statbuf){
     fwrite(buf,1,n,fp_client);
     remain -= n;
   }
-
-  
+}
+void handleStaticExecutableFile(const string& file_path){
+  // clear env
+  clearenv();
+  // basic http env
+  setenv("CONTENT_LENGTH",http_info.headerInfo["Content-Length"].c_str(),1);
+  setenv("CONTENT_TYPE",http_info.headerInfo["Content-Type"].c_str(),1);
+  setenv("REQUEST_URI",http_info.uri.c_str(),1);
+  //setenv("REQUEST_METHOD",http_info.verb.c_str(),1);
+  setenv("REQUEST_METHOD","GET",1);
+  setenv("SCRIPT_NAME",http_info.path.c_str(),1);
+  setenv("QUERY_STRING",http_info.query.c_str(),1);
+  setenv("GATEWAY_INTERFACE","CGI/1.1",1);
+  setenv("PATH","/bin:/usr/bin:/usr/local/bin",1);
+  // address
+  char addr_buf[20] = {0};
+  inet_ntop(AF_INET,&http_info.addr.sin_addr,addr_buf,sizeof(addr_buf));
+  setenv("REMOTE_ADDR",addr_buf,1);
+  // port
+  char port_buf[6] = {0};
+  snprintf(port_buf,5,"%u",ntohs(http_info.addr.sin_port));
+  setenv("REMOTE_PORT",port_buf,1);
+  // reopen fd
+  cout << "Executing script:" << file_path << endl;
+  dup2(fd_client,STDOUT_FILENO);
+  if(http_info.verb == "POST"){
+    //dup2(fd_client,STDIN_FILENO);
+    //close(STDIN_FILENO);
+  }
+  else{
+    //close(STDIN_FILENO);
+  }
+  send_common_header(200);
+  //close(fd_client);
+  if(!exec_cmd(file_path,"")){
+    sendServerError();
+    fprintf(fp_client,"Cannot exec CGI: %s\r\n",file_path.c_str());
+  }
+}
+void handleStaticFile(const string& file_path, struct stat& statbuf){
+  // get extension
+  string extension = get_extension(file_path);  
+  if(is_extension_executable(extension) && is_file_executable(file_path) ){
+    //a valid cgi
+    handleStaticExecutableFile(file_path);
+  }
+  else{
+    handleStaticNormalFile(file_path, statbuf, extension);
+  }
 }
 void handleDirectoryWithRedirect(const string& file_path){
   // check has '/' at the end?
@@ -384,7 +458,7 @@ void handleDirectoryWithoutIndex(const string& file_path){
   closedir(dir);
   
 }
-void handleGET(){
+void handleRequest(){
   // check if we can access that file
   string file_path = string(".") + http_info.path;
   if(access(file_path.c_str(),R_OK) == 0){
@@ -438,24 +512,63 @@ void handleGET(){
     }
     else{
       // other error
-      send_common_header(500);
-      fprintf(fp_client,"Content-Type: text/plain\r\n");
-      fprintf(fp_client,"\r\n");
-      fprintf(fp_client,"Error code = %d\r\n",errno);
+      sendServerError();
       perror("stat");
     }
   
   }
   
 }
-void handlePOST(){
-  // get http body if necessay
-  // check content length
-  // read
-  /*
-     while(fgets(buf,LINE_BUF_SIZE,fp_client)){
-     string line(buf);
-     }
-  */
+void sendServerError(){
+  send_common_header(500);
+  fprintf(fp_client,"Content-Type: text/plain\r\n");
+  fprintf(fp_client,"\r\n");
+  fprintf(fp_client,"Internal Server Error, Error code = %d\r\n",errno);
+}
+// convert string to argv
+char** convert_string_to_argv(const string& arg_list){ 
+  stringstream ss(arg_list);
+  string arg;
+  vector<string> arg_array;
+  while(ss >> arg){
+    arg_array.push_back(arg);
+  }
+  char** argv = new char*[arg_array.size()+1];
+  for(int i=0;i<arg_array.size();i++){
+    string& arg = arg_array[i];
+    argv[i] = new char[arg.length()+1];
+    strncpy(argv[i],arg.c_str(),arg.length()+1);
+  }
+  argv[arg_array.size()] = nullptr;
+#ifdef DEBUG
+  debug("ARGV:");
+  char **ptr = argv;
+  while(*ptr){
+    debug(*ptr);
+    ++ptr;
+  }
+#endif
+  return argv;
+}
+// release argv space
+void delete_argv(char** argv){
+  char **ptr = argv;
+  while(*ptr){
+    delete[] *ptr;
+    ++ptr;
+  }
+  delete[] argv;
+    
+}
+
+
+// execute program with arg string
+bool exec_cmd(const string& filename,const string& arg_list){
+  char** argv = convert_string_to_argv(filename + " " + arg_list);
+  if(execvp(filename.c_str(),argv)){
+    delete_argv(argv);
+    return false;
+  }
+  return true;
 }
 
