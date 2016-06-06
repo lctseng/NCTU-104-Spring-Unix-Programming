@@ -61,6 +61,7 @@ string get_extension(const string& filename);
 bool is_extension_executable(const string& ext);
 bool is_file_executable(const string& ext);
 bool exec_cmd(const string& filename,const string& arg_list);
+char to_env_char(char);
 
 int main(int argc,char** argv){
   int fd_self;
@@ -363,6 +364,16 @@ void handleStaticExecutableFile(const string& file_path){
     char port_buf[6] = {0};
     snprintf(port_buf,5,"%u",ntohs(http_info.addr.sin_port));
     setenv("REMOTE_PORT",port_buf,1);
+    // other env variable
+    for(auto& data :  http_info.headerInfo){
+      string key = data.first; 
+      string value = data.second; 
+      if(key != "Content-Length" && key != "Content-Type"){
+        transform(key.begin(), key.end(), key.begin(), to_env_char);
+        string new_key = string("HTTP_") + key;
+        setenv(new_key.c_str(),value.c_str(),1);
+      }
+    }
     // exec
     if(!exec_cmd(file_path,"")){
       fprintf(stdout,"Cannot exec CGI: %s\r\n",file_path.c_str());
@@ -645,5 +656,12 @@ bool exec_cmd(const string& filename,const string& arg_list){
     return false;
   }
   return true;
+}
+char to_env_char(char c){
+  c = toupper(c);
+  if(c == '-'){
+    c = '_';
+  }
+  return c;
 }
 
